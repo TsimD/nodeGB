@@ -1,35 +1,40 @@
-import colors from 'colors';
+import EventEmitter from "events" ;
 
-// const [arg] = process.argv.splice(2);
-//
-//  console.log(`Hello ${colors.red(arg)}`);
+const [hour, day, month, year] = process.argv[2].split('-')
+const deadline = new Date(Date.UTC(year, month - 1, day, hour))
+const emmiter = new EventEmitter()
 
-const arg = process.argv.splice(2);
-const min = parseInt(arg[0]);
-const max = parseInt(arg[1]);
+const getTime = (sec) => {
 
-const color = ['green', 'yellow', 'red']
-let coll = 0;
-const print = num => {
-    console.log(colors[color[coll]](num))
+    const days = sec > 0 ? Math.floor(sec / 1000 / 60 / 60 / 24) : 0;
+    const hours = sec > 0 ? Math.floor(sec / 1000 / 60 / 60) % 24 : 0;
+    const minutes = sec > 0 ? Math.floor(sec / 1000 / 60) % 60 : 0;
+    const seconds = sec > 0 ? Math.floor(sec / 1000) % 60 : 0;
 
-    if (coll === color.length - 1) {
-        coll = 0
+    return `${days} days ${hours} hours ${minutes} minutes ${seconds} seconds`
+}
 
+const timeLeft = (deadline) => {
+    const presentTime = new Date();
+
+    if (presentTime >= deadline) {
+        emmiter.emit('timerEnd');
     } else {
-        coll++
-
+        console.log(getTime((deadline - presentTime) / 1000) + 'left')
     }
 }
 
-if (isNaN(min) || isNaN(max)) console.log('Не верные аргументы')
-let fl =0
-loop:
-    for (let i = min; i <= max; i++) {
-        for (let j = 2; j < i; j++) {
-            if (i % j == 0) continue loop;
-        }
-        fl =1;
-        print(i)
-    }
-    if(fl===0) console.log("В диапазоне нет простых чисел")
+const showTimer = (timer) => {
+    clearInterval(timer);
+    console.log("Вреья вышло")
+}
+
+
+const timer = setInterval(() => {
+    emmiter.emit('timerGo', deadline)
+}, 1000);
+
+emmiter.on('timerGo', timeLeft);
+emmiter.on('timerEnd', () => {
+    showTimer(timer);
+})
