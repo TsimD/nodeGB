@@ -20,13 +20,14 @@ const timeLeft = (deadline) => {
     if (presentTime >= deadline) {
         emmiter.emit('timerEnd');
     } else {
-        console.log(getTime((deadline - presentTime) / 1000) + 'left')
+        console.clear()
+        console.log(getTime((deadline - presentTime) / 1000) + ' left')
     }
 }
 
 const showTimer = (timer) => {
     clearInterval(timer);
-    console.log("Вреья вышло")
+    console.log("Время вышло")
 }
 
 
