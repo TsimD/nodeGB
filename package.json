@@ -10,7 +10,7 @@
     "type": "git",
     "url": "git+https://github.com/TsimD/nodeGB.git"
   },
-  "typr": "module",
+  "type": "module",
   "author": "",
   "license": "ISC",
   "bugs": {
